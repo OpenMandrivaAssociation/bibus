@@ -20,7 +20,12 @@ BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires:  desktop-file-utils
 BuildRequires:	python
 Requires: 	python
-Requires: 	openoffice.org >= 2.1
+%ifarch i586
+Requires: 	openoffice.org >= 2
+%endif
+%ifarch x86_64
+Requires:	openoffice.org64 >= 2
+%endif
 Requires: 	python-sqlite2
 Requires: 	wxPythonGTK
 
@@ -52,6 +57,13 @@ done
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{mdkversion} == 200710
+    %define oorelease 2.1
+%endif
+%if %{mdkversion} == 200800
+    %define oorelease 2.2
+%endif
+
 %if %{mdkversion} < 200710
 # Before 2007.1 there was no x86_64 OpenOffice.org build
 %make -f Setup/Makefile \
@@ -66,7 +78,7 @@ rm -rf $RPM_BUILD_ROOT
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-2.1_64/program \
+		oopath=%{_libdir}/ooo-%{oorelease}_64/program \
 		install
 	%endif
 
@@ -75,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-2.1/program \
+		oopath=%{_libdir}/ooo-%{oorelease}/program \
 		install
 	%endif
 %endif
