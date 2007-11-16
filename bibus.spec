@@ -1,7 +1,7 @@
 %define name 	bibus
 %define version 1.3.0
 %define bibusrel 1
-%define release %mkrel 3
+%define release %mkrel 4
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
@@ -108,13 +108,13 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/bibus/bibuscorr.cfg
 rm -rf $RPM_BUILD_ROOT%{_iconsdir}/hicolor
 
 # Create bibus.sh for launching bibus
-#cat > $RPM_BUILD_ROOT%{_bindir}/bibus.sh << EObibus
-##!/bin/sh
-#export LD_LIBRARY_PATH=%{_libdir}/ooo-2.0/program
-#export PYTHONPATH=%{_libdir}/ooo-2.0/program
-#%{_bindir}/python %{_datadir}/bibus/bibus.py
-#EObibus
-#chmod 755 $RPM_BUILD_ROOT%{_bindir}/bibus.sh
+cat > $RPM_BUILD_ROOT%{_bindir}/bibus.sh << EObibus
+#!/bin/sh
+export LD_LIBRARY_PATH=%{_libdir}/ooo-%{oorelease}/program
+export PYTHONPATH=%{_libdir}/ooo-%{oorelease}/program
+%{_bindir}/python %{_datadir}/bibus/bibus.py
+EObibus
+chmod 755 $RPM_BUILD_ROOT%{_bindir}/bibus.sh
 
 # localization
 %find_lang %{name}
@@ -140,7 +140,7 @@ desktop-file-install --vendor="" \
 # Old menu style
 install -d -m 755 $RPM_BUILD_ROOT%{_menudir}
 cat << EOF > $RPM_BUILD_ROOT%{_menudir}/%{name}
-?package(%{name}):command="%{name}" \
+?package(%{name}):command="%{name}.sh" \
 needs="X11" \
 icon="%{name}.png" \
 section="Office/Publishing" \
@@ -157,7 +157,7 @@ EOF
 ### [Desktop Entry]
 ### Name=Bibus
 ### Comment="Bibliographic database manager with OpenOffice.org integration"
-### Exec=%{name}
+### Exec=%{name}.sh
 ### Icon=%{name}
 ### Terminal=false
 ### Type=Application
