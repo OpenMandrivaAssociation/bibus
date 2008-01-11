@@ -138,17 +138,6 @@ desktop-file-install --vendor="" \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/*
 
 # Old menu style
-install -d -m 755 $RPM_BUILD_ROOT%{_menudir}
-cat << EOF > $RPM_BUILD_ROOT%{_menudir}/%{name}
-?package(%{name}):command="%{name}.sh" \
-needs="X11" \
-icon="%{name}.png" \
-section="Office/Publishing" \
-title="Bibus" \
-longtitle="Bibliographic database manager with OpenOffice.org integration" \
-startup_notify="true" \
-xdg="true"
-EOF
 
 ### We don't need this entry since the application provides its own .desktop file
 ### # XDG menu 
@@ -177,7 +166,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,0755)
 %doc Docs/html/ScreenShots Docs/html/en Docs/{CHANGELOG,copying,*.txt}
-%{_menudir}/%{name}
 %attr(644,root,root)    %{_miconsdir}/%{name}.png
 %attr(644,root,root)    %{_iconsdir}/%{name}.png
 %attr(644,root,root)    %{_liconsdir}/%{name}.png
