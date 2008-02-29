@@ -1,4 +1,4 @@
-%define name 	bibus
+%define name	bibus
 %define version 1.3.0
 %define bibusrel 1
 %define release %mkrel 4
@@ -8,8 +8,8 @@ Name: 		%{name}
 Version: 	%{version}
 Release: 	%{release}
 Source0: 	%{name}-%{version}.tar.bz2
-Patch0:		bibus-1.2.0-makefile.patch
-Patch1:         bibus-1.2.0-fix-desktop-file.patch
+#Patch0:		bibus-1.2.0-makefile.patch
+Patch1:		bibus-1.2.0-fix-desktop-file.patch
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %if %{mdkversion} == 200800
     %define oorelease 2.2
+%endif
+%if %{mdkversion} == 200810
+    %define oorelease 2.4
 %endif
 
 %if %{mdkversion} < 200710
@@ -172,9 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/%{name}.1*
 %config(noreplace) %{_sysconfdir}/bibus.config
 %{_bindir}/bibus
-%{_datadir}/bibus
+%{_bindir}/bibus.sh
+%{_datadir}/%{name}
 %{_datadir}/applications/bibus.desktop
-#%{_datadir}/applications/mandriva-%{name}.desktop
 %attr(755,root,root)	%{_datadir}/%{name}/Pref_Duplicates_Base.py
 %attr(755,root,root)	%{_datadir}/%{name}/display_panel.py
 %attr(755,root,root)	%{_datadir}/%{name}/bibus.py
