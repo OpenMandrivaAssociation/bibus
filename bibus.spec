@@ -1,13 +1,13 @@
 %define name	bibus
-%define version 1.3.0
-%define bibusrel 1
-%define release %mkrel 4
+%define version 1.4
+%define bibusrel 0rc2
+%define release %mkrel %{bibusrel}
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
 Version: 	%{version}
 Release: 	%{release}
-Source0: 	%{name}-%{version}.tar.bz2
+Source0: 	%{name}-%{version}.%{bibusrel}.tar.bz2
 #Patch0:		bibus-1.2.0-makefile.patch
 Patch1:		bibus-1.2.0-fix-desktop-file.patch
 Source11:	%{name}.16.png
@@ -40,11 +40,11 @@ searching, editing and sorting bibliographic records, it features:
 - Live queries (i.e. upgraded when database is modified).
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}.%{bibusrel}
 #%patch0 -p1
 %patch1 -p1
 find Docs/ -type f -exec chmod 0644 {} \;
-mv locale/zh_cn locale_CN
+#mv locale/zh_cn locale_CN
 for file in Docs/html/en/bibMSW_files/filelist.xml \
 'Docs/html/en/eTBlast Interface to Bibus.htm' \
 'Docs/html/en/eTBlast Interface to Bibus_files/filelist.xml' \
