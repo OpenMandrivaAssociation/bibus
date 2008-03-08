@@ -1,7 +1,7 @@
 %define name	bibus
 %define version 1.4
 %define bibusrel 0rc2
-%define release %mkrel %{bibusrel}
+%define release %mkrel %{bibusrel}.2
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
@@ -22,9 +22,11 @@ BuildRequires:	python
 Requires: 	python
 %ifarch i586
 Requires: 	openoffice.org >= 2
+Requires:	openoffice.org-pyuno
 %endif
 %ifarch x86_64
 Requires:	openoffice.org64 >= 2
+Requires:	openoffice.org64-pyuno
 %endif
 Requires: 	python-sqlite2
 Requires: 	wxPythonGTK
