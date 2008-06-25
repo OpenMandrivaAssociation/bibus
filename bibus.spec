@@ -1,19 +1,19 @@
 %define name	bibus
-%define version 1.4
-%define bibusrel 0rc2
-%define release %mkrel %{bibusrel}.2
+%define version	1.4.3
+%define bibusrel	2
+%define release		%mkrel %{bibusrel}.1
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
 Version: 	%{version}
 Release: 	%{release}
-Source0: 	%{name}-%{version}.%{bibusrel}.tar.bz2
+Source0: 	%{name}_%{version}-%{bibusrel}.tar.bz2
 #Patch0:		bibus-1.2.0-makefile.patch
 Patch1:		bibus-1.2.0-fix-desktop-file.patch
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
-License: 	GPL
+License: 	GPLv2
 Group: 		Publishing
 Url: 		http://bibus-biblio.sourceforge.net
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -42,15 +42,30 @@ searching, editing and sorting bibliographic records, it features:
 - Live queries (i.e. upgraded when database is modified).
 
 %prep
-%setup -q -n %{name}-%{version}.%{bibusrel}
+%setup -q -n %{name}1.4
 #%patch0 -p1
 %patch1 -p1
+
+rm -rf Docs/html/en/eTBlast\ Interface\ to\ Bibus_files/CVS
+
+if [ -d ./CVS ]; then
+   find . -type d -perm 0700 -exec chmod 755 {} \;
+   find . -type f -perm 0555 -exec chmod 755 {} \;
+   find . -type f -perm 0444 -exec chmod 644 {} \;
+fi
+
+for i in `find . -type d -name CVS`  `find . -type d -name .svn` `find . -type f -name .cvs\*` `find . -type f -name .#\*`; do
+    if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
+done
+
 find Docs/ -type f -exec chmod 0644 {} \;
-#mv locale/zh_cn locale_CN
+mv locale/zh_cn locale/zh_CN
+mv locale/cn locale/zh
+
 for file in Docs/html/en/bibMSW_files/filelist.xml \
 'Docs/html/en/eTBlast Interface to Bibus.htm' \
 'Docs/html/en/eTBlast Interface to Bibus_files/filelist.xml' \
-Docs/html/en/bibMSW.htm;
+Docs/html/en/bibMSW.htm newProgressWin.py;
 do
 	tr -d '\r' < "$file" > tmp
 	mv tmp "$file"
@@ -66,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
     %define oorelease 2.2
 %endif
 %if %{mdkversion} == 200810
+    %define oorelease 2.4
+%endif
+%if %{mdkversion} == 200900
     %define oorelease 2.4
 %endif
 
@@ -142,23 +160,6 @@ desktop-file-install --vendor="" \
   --add-category="X-MandrivaLinux-Office-Publishing;Office" \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/*
 
-# Old menu style
-
-### We don't need this entry since the application provides its own .desktop file
-### # XDG menu 
-### mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-### cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
-### [Desktop Entry]
-### Name=Bibus
-### Comment="Bibliographic database manager with OpenOffice.org integration"
-### Exec=%{name}.sh
-### Icon=%{name}
-### Terminal=false
-### Type=Application
-### Categories=X-MandrivaLinux-Office-Publishing;Office;
-### StartupNotify=true
-### EOF
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -184,18 +185,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/bibus.sh
 %{_datadir}/%{name}
 %{_datadir}/applications/bibus.desktop
-%attr(755,root,root)	%{_datadir}/%{name}/Pref_Duplicates_Base.py
-%attr(755,root,root)	%{_datadir}/%{name}/display_panel.py
-%attr(755,root,root)	%{_datadir}/%{name}/bibus.py
-%attr(755,root,root)    %{_datadir}/%{name}/Pref_Display.py 
-%attr(755,root,root)    %{_datadir}/%{name}/Pref_Search.py 
-%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/MySQL_Setup.py 
-%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/FirstTimeWizard_WP.py 
-%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/Wizard_SQLite.py 
-%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/Wizard_MySQL.py 
-%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/FirstTimeWizard_DB.py 
-%attr(755,root,root)    %{_datadir}/%{name}/CodecChoice.py 
-%attr(755,root,root)	%{_datadir}/%{name}/Pref_Connection.py
-%attr(755,root,root)	%{_datadir}/%{name}/Pref_DB.py
-
-
+%attr(755,root,root)	%{_datadir}/%{name}/*.py
+%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/*.py
