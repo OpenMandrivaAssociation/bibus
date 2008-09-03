@@ -1,7 +1,8 @@
 %define name	bibus
 %define version	1.4.3
 %define bibusrel	2
-%define release		%mkrel %{bibusrel}.1
+#define release		%mkrel %{bibusrel}.1
+%define	 release		%mkrel 2
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
@@ -76,15 +77,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{mdkversion} == 200710
     %define oorelease 2.1
+    %define progdir "program"
 %endif
 %if %{mdkversion} == 200800
     %define oorelease 2.2
+    %define progdir "program"
 %endif
 %if %{mdkversion} == 200810
     %define oorelease 2.4
+    %define progdir "program"
 %endif
 %if %{mdkversion} == 200900
-    %define oorelease 2.4
+    %define oorelease 3.0
+    %define progdir "basis%{oorelease}/program"
 %endif
 
 %if %{mdkversion} < 200710
@@ -93,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 	sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 	python=%{_bindir}/python \
-	oopath=%{_libdir}/ooo-2.1/program \
+	oopath=%{_libdir}/ooo-2.1/%{progdir} \
 	install
 %else
 	%ifarch x86_64
@@ -101,7 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-%{oorelease}_64/program \
+		oopath=%{_libdir}/ooo-%{oorelease}_64/%{progdir} \
 		install
 	%endif
 
@@ -110,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-%{oorelease}/program \
+		oopath=%{_libdir}/ooo-%{oorelease}/%{progdir} \
 		install
 	%endif
 %endif
@@ -133,8 +138,8 @@ rm -rf $RPM_BUILD_ROOT%{_iconsdir}/hicolor
 # Create bibus.sh for launching bibus
 cat > $RPM_BUILD_ROOT%{_bindir}/bibus.sh << EObibus
 #!/bin/sh
-export LD_LIBRARY_PATH=%{_libdir}/ooo-%{oorelease}/program
-export PYTHONPATH=%{_libdir}/ooo-%{oorelease}/program
+export LD_LIBRARY_PATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
+export PYTHONPATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
 %{_bindir}/python %{_datadir}/bibus/bibus.py
 EObibus
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/bibus.sh
