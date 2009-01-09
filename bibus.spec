@@ -1,16 +1,15 @@
 %define name	bibus
-%define version	1.4.3
+%define version	1.4.3.1
 %define bibusrel	2
 #define release		%mkrel %{bibusrel}.1
-%define	 release		%mkrel 3
+%define	 release		%mkrel 1
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
 Version: 	%{version}
 Release: 	%{release}
-Source0: 	%{name}_%{version}-%{bibusrel}.tar.bz2
-#Patch0:		bibus-1.2.0-makefile.patch
-Patch1:		bibus-1.2.0-fix-desktop-file.patch
+Source0: 	%{name}-%{version}.tar.bz2
+Patch0:		bibus-1.4.3.1-fix-desktop-file.patch.bz2
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
@@ -43,9 +42,8 @@ searching, editing and sorting bibliographic records, it features:
 - Live queries (i.e. upgraded when database is modified).
 
 %prep
-%setup -q -n %{name}1.4
-#%patch0 -p1
-%patch1 -p1
+%setup -q -n %{name}-%{version}
+%patch0 -p1
 
 rm -rf Docs/html/en/eTBlast\ Interface\ to\ Bibus_files/CVS
 
@@ -63,15 +61,6 @@ find Docs/ -type f -exec chmod 0644 {} \;
 mv locale/zh_cn locale/zh_CN
 mv locale/cn locale/zh
 
-for file in Docs/html/en/bibMSW_files/filelist.xml \
-'Docs/html/en/eTBlast Interface to Bibus.htm' \
-'Docs/html/en/eTBlast Interface to Bibus_files/filelist.xml' \
-Docs/html/en/bibMSW.htm newProgressWin.py;
-do
-	tr -d '\r' < "$file" > tmp
-	mv tmp "$file"
-done
-
 %install
 rm -rf $RPM_BUILD_ROOT
 
@@ -88,6 +77,10 @@ rm -rf $RPM_BUILD_ROOT
     %define progdir "program"
 %endif
 %if %{mdkversion} == 200900
+    %define oorelease 3.0
+    %define progdir "basis%{oorelease}/program"
+%endif
+%if %{mdkversion} == 200910
     %define oorelease 3.0
     %define progdir "basis%{oorelease}/program"
 %endif
@@ -154,16 +147,18 @@ install -m644 %{SOURCE13} -D $RPM_BUILD_ROOT%{_liconsdir}/%{name}.png
 
 # Menu item, using the provide .desktop file
 
-# fix pathnames in bibus.desktop
+# Position the bibus.desktop entry
 install -m644 --backup=off Setup/bibus.desktop -D $RPM_BUILD_ROOT%{_datadir}/applications/bibus.desktop
-echo 'Exec=%{_bindir}/bibus' >> $RPM_BUILD_ROOT%{_datadir}/applications/bibus.desktop
-echo 'Icon=%{_iconsdir}/%{name}.png' >> $RPM_BUILD_ROOT%{_datadir}/applications/bibus.desktop
 
 desktop-file-install --vendor="" \
   --remove-category="Application" \
   --add-category="GTK" \
   --add-category="X-MandrivaLinux-Office-Publishing;Office" \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/*
+
+# Adjust some permissions
+chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/*.py
+chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/FirstStart/*.py
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -190,5 +185,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/bibus.sh
 %{_datadir}/%{name}
 %{_datadir}/applications/bibus.desktop
-%attr(755,root,root)	%{_datadir}/%{name}/*.py
-%attr(755,root,root)    %{_datadir}/%{name}/FirstStart/*.py
