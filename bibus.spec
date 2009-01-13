@@ -59,7 +59,16 @@ done
 
 find Docs/ -type f -exec chmod 0644 {} \;
 mv locale/zh_cn locale/zh_CN
-mv locale/cn locale/zh
+mv locale/cn locale/zh_TW
+
+for file in Docs/html/en/bibMSW_files/filelist.xml \
+'Docs/html/en/eTBlast Interface to Bibus.htm' \
+'Docs/html/en/eTBlast Interface to Bibus_files/filelist.xml' \
+Docs/html/en/bibMSW.htm newProgressWin.py;
+do
+       tr -d '\r' < "$file" > tmp
+       mv tmp "$file"
+done
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -177,6 +186,7 @@ desktop-file-install --vendor="" \
 # Adjust some permissions
 chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/*.py
 chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/FirstStart/*.py
+chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/Data/parsePubMedJ.py
 
 %clean
 rm -rf $RPM_BUILD_ROOT
