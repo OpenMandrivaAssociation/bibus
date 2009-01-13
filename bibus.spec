@@ -64,7 +64,8 @@ mv locale/cn locale/zh_TW
 for file in Docs/html/en/bibMSW_files/filelist.xml \
 'Docs/html/en/eTBlast Interface to Bibus.htm' \
 'Docs/html/en/eTBlast Interface to Bibus_files/filelist.xml' \
-Docs/html/en/bibMSW.htm newProgressWin.py;
+Docs/html/en/bibMSW.htm newProgressWin.py \
+Docs/release_notes.txt;
 do
        tr -d '\r' < "$file" > tmp
        mv tmp "$file"
@@ -184,9 +185,19 @@ desktop-file-install --vendor="" \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/*
 
 # Adjust some permissions
-chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/*.py
-chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/FirstStart/*.py
-chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/Data/parsePubMedJ.py
+for file in bibus.py bibusStart.py CleanDB.py CodecChoice.py \
+Data/parsePubMedJ.py display_panel.py \
+FirstStart/FirstTimeWizard_DB.py \
+FirstStart/FirstTimeWizard_WP.py \
+FirstStart/Wizard_SQLite.py \
+FirstStart/Wizard_MySQL.py \
+FirstStart/MySQL_Setup.py \
+Pref_Connection.py Pref_DB.py Pref_Display.py \
+Pref_Duplicates_Base.py Pref_Journals.py Pref_Search.py \
+RefDisplayDates.py;
+do
+	chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/$file
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
