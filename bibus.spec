@@ -2,7 +2,7 @@
 %define version	1.4.3.1
 %define bibusrel	2
 #define release		%mkrel %{bibusrel}.1
-%define	 release		%mkrel 1
+%define	 release		%mkrel 2
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
@@ -13,7 +13,7 @@ Patch0:		bibus-1.4.3.1-fix-desktop-file.patch.bz2
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
-License: 	GPLv2
+License: 	GPLv2+
 Group: 		Publishing
 Url: 		http://bibus-biblio.sourceforge.net
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -66,23 +66,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{mdkversion} == 200710
     %define oorelease 2.1
-    %define progdir "program"
 %endif
 %if %{mdkversion} == 200800
     %define oorelease 2.2
-    %define progdir "program"
 %endif
 %if %{mdkversion} == 200810
     %define oorelease 2.4
-    %define progdir "program"
 %endif
 %if %{mdkversion} == 200900
     %define oorelease 3.0
-    %define progdir "basis%{oorelease}/program"
 %endif
 %if %{mdkversion} == 200910
     %define oorelease 3.0
-    %define progdir "basis%{oorelease}/program"
 %endif
 
 %if %{mdkversion} < 200710
@@ -93,13 +88,34 @@ rm -rf $RPM_BUILD_ROOT
 	python=%{_bindir}/python \
 	oopath=%{_libdir}/ooo-2.1/%{progdir} \
 	install
-%else
+%elsif %{mdkversion} < 200900
+      %ifarch x86_64
+	      %make -f Setup/Makefile \
+	      DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
+	      sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
+	      python=%{_bindir}/python \
+	      oopath=%{_libdir}/ooo-%{oorelease}_64/program \
+	      install
+	%endif
+
+	%ifarch i586
+	%make -f Setup/Makefile \
+	      DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
+	      sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
+	      python=%{_bindir}/python \
+	      oopath=%{_libdir}/ooo-%{oorelease}/program \
+	      install
+	      %endif
+
+%else %if %{mdkversion} >= 200900
 	%ifarch x86_64
 	%make -f Setup/Makefile \
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-%{oorelease}_64/%{progdir} \
+		oopath=%{_libdir}/ooo-%{oorelease}_64/program \
+		ooure=%{_libdir}/ooo-%{oorelease}_64/basis-link/ure-link/lib \
+		oobasis=%{_libdir}/ooo-%{oorelease}_64/basis-link/program \
 		install
 	%endif
 
@@ -108,7 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-%{oorelease}/%{progdir} \
+		oopath=%{_libdir}/ooo-%{oorelease}/program \
+		ooure=%{_libdir}/ooo-%{oorelease}/basis-link/ure-link/lib \
+		oobasis=%{_libdir}/ooo-%{oorelease}/basis-link/program \
 		install
 	%endif
 %endif
