@@ -2,7 +2,7 @@
 %define version	1.4.3.1
 %define bibusrel	2
 #define release		%mkrel %{bibusrel}.1
-%define	 release		%mkrel 2
+%define	 release		%mkrel 3
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
@@ -87,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT
     %define oorelease 3.0
 %endif
 %if %{mdkversion} == 200910
-    %define oorelease 3.0
+    %define oorelease 3.0.1
 %endif
 
 %if %{mdkversion} < 200710
