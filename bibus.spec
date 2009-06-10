@@ -2,6 +2,17 @@
 %define version	1.4.3.2
 %define	release	%mkrel 1
 
+%ifarch %ix86
+%define ooname openoffice.org
+%define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org)
+%define ooext %{_libdir}/ooo-%{oorelease}
+%endif
+%ifarch x86_64
+%define ooname openoffice.org64
+%define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org64)
+%define ooext %{_libdir}/ooo-%{oorelease}_64
+%endif
+
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
 Version: 	%{version}
@@ -17,15 +28,10 @@ Url: 		http://bibus-biblio.sourceforge.net
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires:  desktop-file-utils
 BuildRequires:	python
+BuildRequires:	%ooname >= 2
 Requires: 	python
-%ifarch i586
-Requires: 	openoffice.org >= 2
-Requires:	openoffice.org-pyuno
-%endif
-%ifarch x86_64
-Requires:	openoffice.org64 >= 2
-Requires:	openoffice.org64-pyuno
-%endif
+Requires:	%ooname >= 2
+Requires:	%ooname-pyuno
 Requires: 	python-sqlite2
 Requires: 	wxPythonGTK
 
@@ -40,53 +46,14 @@ searching, editing and sorting bibliographic records, it features:
 - Live queries (i.e. upgraded when database is modified).
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-1.4.3
 %patch0 -p1
 
-rm -rf Docs/html/en/eTBlast\ Interface\ to\ Bibus_files/CVS
-
-if [ -d ./CVS ]; then
-   find . -type d -perm 0700 -exec chmod 755 {} \;
-   find . -type f -perm 0555 -exec chmod 755 {} \;
-   find . -type f -perm 0444 -exec chmod 644 {} \;
-fi
-
-for i in `find . -type d -name CVS`  `find . -type d -name .svn` `find . -type f -name .cvs\*` `find . -type f -name .#\*`; do
-    if [ -e "$i" ]; then rm -rf $i; fi >&/dev/null
-done
-
-find Docs/ -type f -exec chmod 0644 {} \;
 mv locale/zh_cn locale/zh_CN
 mv locale/cn locale/zh_TW
 
-for file in Docs/html/en/bibMSW_files/filelist.xml \
-'Docs/html/en/eTBlast Interface to Bibus.htm' \
-'Docs/html/en/eTBlast Interface to Bibus_files/filelist.xml' \
-Docs/html/en/bibMSW.htm newProgressWin.py \
-Docs/release_notes.txt;
-do
-       tr -d '\r' < "$file" > tmp
-       mv tmp "$file"
-done
-
 %install
 rm -rf $RPM_BUILD_ROOT
-
-%if %{mdkversion} == 200710
-    %define oorelease 2.1
-%endif
-%if %{mdkversion} == 200800
-    %define oorelease 2.2
-%endif
-%if %{mdkversion} == 200810
-    %define oorelease 2.4
-%endif
-%if %{mdkversion} == 200900
-    %define oorelease 3.0
-%endif
-%if %{mdkversion} == 200910
-    %define oorelease 3.0.1
-%endif
 
 %if %{mdkversion} < 200710
 # Before 2007.1 there was no x86_64 OpenOffice.org build
@@ -97,46 +64,21 @@ rm -rf $RPM_BUILD_ROOT
 	oopath=%{_libdir}/ooo-2.1/%{progdir} \
 	install
 %elsif %{mdkversion} < 200900
-      %ifarch x86_64
-	      %make -f Setup/Makefile \
-	      DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
-	      sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
-	      python=%{_bindir}/python \
-	      oopath=%{_libdir}/ooo-%{oorelease}_64/program \
-	      install
-	%endif
-
-	%ifarch i586
-	%make -f Setup/Makefile \
-	      DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
-	      sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
-	      python=%{_bindir}/python \
-	      oopath=%{_libdir}/ooo-%{oorelease}/program \
-	      install
-	      %endif
-
+      %make -f Setup/Makefile \
+      DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
+      sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
+      python=%{_bindir}/python \
+      oopath=%{ooext}/program \
+      install
 %else %if %{mdkversion} >= 200900
-	%ifarch x86_64
 	%make -f Setup/Makefile \
 		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
 		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
 		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-%{oorelease}_64/program \
-		ooure=%{_libdir}/ooo-%{oorelease}_64/basis-link/ure-link/lib \
-		oobasis=%{_libdir}/ooo-%{oorelease}_64/basis-link/program \
+		oopath=%{ooext}/program \
+		ooure=%{ooext}/basis-link/ure-link/lib \
+		oobasis=%{ooext}/basis-link/program \
 		install
-	%endif
-
-	%ifarch i586
-	%make -f Setup/Makefile \
-		DESTDIR=$RPM_BUILD_ROOT%{_prefix} \
-		sysconfdir=$RPM_BUILD_ROOT%{_sysconfdir} \
-		python=%{_bindir}/python \
-		oopath=%{_libdir}/ooo-%{oorelease}/program \
-		ooure=%{_libdir}/ooo-%{oorelease}/basis-link/ure-link/lib \
-		oobasis=%{_libdir}/ooo-%{oorelease}/basis-link/program \
-		install
-	%endif
 %endif
 
 # we use our own doc installation macro
