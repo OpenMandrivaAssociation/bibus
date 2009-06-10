@@ -1,15 +1,13 @@
 %define name	bibus
-%define version	1.4.3.1
-%define bibusrel	2
-#define release		%mkrel %{bibusrel}.1
-%define	 release		%mkrel 3
+%define version	1.4.3.2
+%define	release	%mkrel 1
 
 Summary: 	Bibliographic database manager with OpenOffice.org integration
 Name: 		%{name}
 Version: 	%{version}
 Release: 	%{release}
-Source0: 	%{name}-%{version}.tar.bz2
-Patch0:		bibus-1.4.3.1-fix-desktop-file.patch.bz2
+Source0: 	http://freefr.dl.sourceforge.net/sourceforge/bibus-biblio/%{name}-%{version}.tar.gz
+Patch0:		bibus-1.4.3.1-fix-desktop-file.patch
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
@@ -181,7 +179,7 @@ install -m644 --backup=off Setup/bibus.desktop -D $RPM_BUILD_ROOT%{_datadir}/app
 desktop-file-install --vendor="" \
   --remove-category="Application" \
   --add-category="GTK" \
-  --add-category="X-MandrivaLinux-Office-Publishing;Office" \
+  --add-category="Office" \
   --dir $RPM_BUILD_ROOT%{_datadir}/applications $RPM_BUILD_ROOT%{_datadir}/applications/*
 
 # Adjust some permissions
