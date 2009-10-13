@@ -1,5 +1,5 @@
 %define name	bibus
-%define version	1.4.3.2
+%define version	1.5.0
 %define	release	%mkrel 1
 
 %ifarch %ix86
@@ -13,27 +13,27 @@
 %define ooext %{_libdir}/ooo-%{oorelease}_64
 %endif
 
-Summary: 	Bibliographic database manager with OpenOffice.org integration
-Name: 		%{name}
-Version: 	%{version}
-Release: 	%{release}
-Source0: 	http://freefr.dl.sourceforge.net/sourceforge/bibus-biblio/%{name}-%{version}.tar.gz
+Summary:	Bibliographic database manager with OpenOffice.org integration
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+Source0:	http://freefr.dl.sourceforge.net/sourceforge/bibus-biblio/%{name}-%{version}.tar.gz
 Patch0:		bibus-1.4.3.1-fix-desktop-file.patch
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
-License: 	GPLv2+
-Group: 		Publishing
-Url: 		http://bibus-biblio.sourceforge.net
-BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-BuildRequires:  desktop-file-utils
-BuildRequires:	python
-BuildRequires:	%ooname >= 2
-Requires: 	python
-Requires:	%ooname >= 2
+License:	GPLv2+
+Group:		Publishing
+Url:		http://bibus-biblio.sourceforge.net
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRequires:	desktop-file-utils
+BuildRequires:	python >= 2.5
+BuildRequires:	%ooname >= 3
+Requires:	python >= 2.5
+Requires:	%ooname >= 3
 Requires:	%ooname-pyuno
-Requires: 	python-sqlite2
-Requires: 	wxPythonGTK
+#Requires:	python-sqlite2
+Requires:	wxPythonGTK
 
 %description
 Bibus is a bibliographic and reference management software. Besides besides
@@ -46,7 +46,7 @@ searching, editing and sorting bibliographic records, it features:
 - Live queries (i.e. upgraded when database is modified).
 
 %prep
-%setup -q -n %{name}-1.4.3
+%setup -q -n %{name}-1.5.0
 %patch0 -p1
 
 mv locale/zh_cn locale/zh_CN
@@ -96,14 +96,16 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/bibus/bibuscorr.cfg
 # we use distro's iconsdir
 rm -rf $RPM_BUILD_ROOT%{_iconsdir}/hicolor
 
-# Create bibus.sh for launching bibus
-cat > $RPM_BUILD_ROOT%{_bindir}/bibus.sh << EObibus
-#!/bin/sh
-export LD_LIBRARY_PATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
-export PYTHONPATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
-%{_bindir}/python %{_datadir}/bibus/bibus.py
-EObibus
-chmod 755 $RPM_BUILD_ROOT%{_bindir}/bibus.sh
+# Not used ...
+
+## Create bibus.sh for launching bibus
+#cat > $RPM_BUILD_ROOT%{_bindir}/bibus.sh << EObibus
+##!/bin/sh
+#export LD_LIBRARY_PATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
+#export PYTHONPATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
+#%{_bindir}/python %{_datadir}/bibus/bibus.py
+#EObibus
+#chmod 755 $RPM_BUILD_ROOT%{_bindir}/bibus.sh
 
 # localization
 %find_lang %{name}
@@ -128,13 +130,32 @@ desktop-file-install --vendor="" \
 for file in bibus.py bibusStart.py CleanDB.py CodecChoice.py \
 Data/parsePubMedJ.py display_panel.py \
 FirstStart/FirstTimeWizard_DB.py \
-FirstStart/FirstTimeWizard_WP.py \
 FirstStart/Wizard_SQLite.py \
 FirstStart/Wizard_MySQL.py \
 FirstStart/MySQL_Setup.py \
 Pref_Connection.py Pref_DB.py Pref_Display.py \
 Pref_Duplicates_Base.py Pref_Journals.py Pref_Search.py \
-RefDisplayDates.py;
+RefDisplayDates.py \
+moveFile.py \
+lyx_remote.py \
+BIBbase.py \
+Pref_PubMed.py \
+RefEditor_Files.py \
+LyX/test/test_constants.py \
+LyX/test/test_bindings.py \
+LyX/test/test_lyxserver_no_running_lyx.py \
+LyX/test/test_lfuns.py \
+LyX/test/test_lyxclient.py \
+LyX/test/test_lyxserver.py \
+LyX/test/test_lyxclient_no_running_lyx.py \
+LyX/test/test_lyx_remote.py \
+LyX/examples/lyx-remote \
+LyX/examples/lyx-Mx \
+LyX/examples/lyx-bindings \
+LyX/examples/lyx-with-client \
+LyX/examples/lyx-python \
+Utilities/open_url.py \
+Utilities/title_case.py;
 do
 	chmod 755     $RPM_BUILD_ROOT/%{_datadir}/%{name}/$file
 done
@@ -155,12 +176,11 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root,0755)
 %doc Docs/html/ScreenShots Docs/html/en Docs/{CHANGELOG,copying,*.txt}
-%attr(644,root,root)    %{_miconsdir}/%{name}.png
-%attr(644,root,root)    %{_iconsdir}/%{name}.png
-%attr(644,root,root)    %{_liconsdir}/%{name}.png
+%attr(644,root,root) %{_miconsdir}/%{name}.png
+%attr(644,root,root) %{_iconsdir}/%{name}.png
+%attr(644,root,root) %{_liconsdir}/%{name}.png
 %{_mandir}/man1/%{name}.1*
 %config(noreplace) %{_sysconfdir}/bibus.config
 %{_bindir}/bibus
-%{_bindir}/bibus.sh
 %{_datadir}/%{name}
 %{_datadir}/applications/bibus.desktop
