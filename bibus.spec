@@ -2,15 +2,24 @@
 %define version	1.5.0
 %define	release	%mkrel 1
 
-%ifarch %ix86
-%define ooname openoffice.org
-%define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org)
-%define ooext %{_libdir}/ooo-%{oorelease}
-%endif
-%ifarch x86_64
-%define ooname openoffice.org64
-%define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org64)
-%define ooext %{_libdir}/ooo-%{oorelease}_64
+# Detect the correct path for openoffice
+# Starting with the 2010.0 edition, there is no more an openoffice64 specific package
+
+%if %{mdkversion} < 201000
+    %ifarch %ix86	 
+    %define ooname openoffice.org
+    %define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org)
+    %define ooext %{_libdir}/ooo-%{oorelease}
+    %endif
+    %ifarch x86_64
+    %define ooname openoffice.org64
+    %define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org64)
+    %define ooext %{_libdir}/ooo-%{oorelease}_64
+    %endif
+%else
+    %define ooname openoffice.org
+    %define oorelease %(rpm -q --queryformat %{VERSION} openoffice.org)
+    %define ooext %{_libdir}/ooo-%{oorelease}
 %endif
 
 Summary:	Bibliographic database manager with OpenOffice.org integration
@@ -95,17 +104,6 @@ install -m644 --backup=off $RPM_BUILD_ROOT%{_datadir}/bibus/bibuscorr.cfg \
 rm -f $RPM_BUILD_ROOT%{_datadir}/bibus/bibuscorr.cfg
 # we use distro's iconsdir
 rm -rf $RPM_BUILD_ROOT%{_iconsdir}/hicolor
-
-# Not used ...
-
-## Create bibus.sh for launching bibus
-#cat > $RPM_BUILD_ROOT%{_bindir}/bibus.sh << EObibus
-##!/bin/sh
-#export LD_LIBRARY_PATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
-#export PYTHONPATH=%{_libdir}/ooo-%{oorelease}/%{progdir}
-#%{_bindir}/python %{_datadir}/bibus/bibus.py
-#EObibus
-#chmod 755 $RPM_BUILD_ROOT%{_bindir}/bibus.sh
 
 # localization
 %find_lang %{name}
