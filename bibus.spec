@@ -55,7 +55,7 @@ searching, editing and sorting bibliographic records, it features:
 - Live queries (i.e. upgraded when database is modified).
 
 %prep
-%setup -q -n %{name}-1.5.0
+%setup -q -n %{name}-%{version}
 %patch0 -p1
 
 mv locale/zh_cn locale/zh_CN
