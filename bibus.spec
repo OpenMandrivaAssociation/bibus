@@ -1,6 +1,6 @@
 %define name	bibus
-%define version	1.5.0
-%define	release	%mkrel 2
+%define version	1.5.1
+%define	release	%mkrel 1
 
 # Detect the correct path for openoffice
 # Starting with the 2010.0 edition, there is no more an openoffice64 specific package
