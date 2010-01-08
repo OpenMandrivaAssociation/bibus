@@ -1,6 +1,6 @@
 %define name	bibus
 %define version	1.5.1
-%define	release	%mkrel 1
+%define	release	%mkrel 2
 
 # Detect the correct path for openoffice
 # Starting with the 2010.0 edition, there is no more an openoffice64 specific package
@@ -28,6 +28,7 @@ Version:	%{version}
 Release:	%{release}
 Source0:	http://freefr.dl.sourceforge.net/sourceforge/bibus-biblio/%{name}-%{version}.tar.gz
 Patch0:		bibus-1.4.3.1-fix-desktop-file.patch
+Patch1:		bibus-1.5.1-fix_path_search.patch
 Source11:	%{name}.16.png
 Source12:	%{name}.32.png
 Source13:	%{name}.48.png
@@ -57,6 +58,7 @@ searching, editing and sorting bibliographic records, it features:
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 mv locale/zh_cn locale/zh_CN
 mv locale/cn locale/zh_TW
