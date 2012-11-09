@@ -1,0 +1,18 @@
+--- bibus-1.4.3.1/Setup/bibus.desktop_orig	2009-01-09 11:07:38.000000000 +0100
++++ bibus-1.4.3.1/Setup/bibus.desktop	2009-01-09 11:08:07.000000000 +0100
+@@ -6,6 +6,7 @@ Name[en]=Bibus
+ Name[de]=Bibus
+ Name[fr]=Bibus
+ Name[hu]=Bibus
++GenericName=Bibus bibliographic database
+ GenericName[en]=Bibus bibliographic database
+ GenericName[de]=Bibliographische Datenbank Bibus
+ GenericName[fr]=Base de donnée bibliographique Bibus
+@@ -19,6 +20,6 @@ Categories=GNOME;Application;WordProcess
+ Type=Application
+ Terminal=false
+ Exec=bibus
+-Icon=bibus.png
++Icon=bibus
+ StartupNotify=true
+ 

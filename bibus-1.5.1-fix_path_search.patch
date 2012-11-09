@@ -1,0 +1,15 @@
+--- bibus/bibusStart.py.bak    2010-01-08 11:02:10.000000000 +0100
++++ bibus/bibusStart.py    2010-01-08 11:03:05.000000000 +0100
+@@ -20,8 +20,10 @@
+ import ConfigParser,os,sys,urllib,urlparse
+ cp=ConfigParser.ConfigParser()
+ fileName = sys.argv[0]
+-while os.path.islink(fileName): fileName = os.readlink(fileName)
+-sourcedir = os.path.abspath( os.path.dirname(fileName) )
++while os.path.islink(fileName):
++    linkName = os.readlink(fileName)
++    fileName = os.path.join(os.path.dirname(fileName), linkName)
++sourcedir = os.path.dirname(fileName)
+ cp.read( os.path.join(sourcedir,'bibus.cfg') )
+ # We read first, then if it is not null we convert to absolute path
+ # otherwise, empty path will be converted to the current directory path
