@@ -1,5 +1,5 @@
 sources:
-  "bibus-1.5.1.tar.gz:"	b129be44f5f2e67fb5e20e769f9f018123b0cdc7
-  "bibus.16.png:"	d67830100126c7bf1320f2ea9824e6628c3df711
-  "bibus.32.png:"	8756fff3eb3d5ab3d8eda9474fbf323df9c81020
-  "bibus.48.png:"	506af5819f7967f57ff8e71078d7dd78a57cb677
+  bibus.16.png: d67830100126c7bf1320f2ea9824e6628c3df711
+  bibus.32.png: 8756fff3eb3d5ab3d8eda9474fbf323df9c81020
+  bibus.48.png: 506af5819f7967f57ff8e71078d7dd78a57cb677
+  bibus_1.5.2.orig.tar.gz: 2c09ae44363bd41466f72d2a03a7c6bc5000b922

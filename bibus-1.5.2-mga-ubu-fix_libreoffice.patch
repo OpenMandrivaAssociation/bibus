@@ -1,0 +1,53 @@
+diff -Naur a/Makefile b/Makefile
+--- a/Makefile	2011-11-28 22:26:19.000000000 +0200
++++ b/Makefile	2013-04-01 21:28:46.918312023 +0300
+@@ -1,9 +1,9 @@
+ # you presumably will only have to change the three first lines below
+ DESTDIR = /usr/local
+ python = /usr/bin/python
+-oopath = /usr/lib/openoffice/program
+-ooure = /usr/lib/openoffice.org/basis-link/ure-link/lib
+-oobasis = /usr/lib/openoffice/basis-link/program
++oopath = /usr/lib/libreoffice/program
++ooure = /usr/lib/libreoffice/program/ure-link/lib
++oobasis = /usr/lib/libreoffice/program
+ #
+ prefix = $(DESTDIR)
+ exec_prefix = $(prefix)
+diff -Naur a/Setup/Makefile b/Setup/Makefile
+--- a/Setup/Makefile	2011-11-28 22:26:19.000000000 +0200
++++ b/Setup/Makefile	2013-04-01 22:50:06.810084775 +0300
+@@ -1,9 +1,9 @@
+ # you presumably will only have to change the three first lines below
+ DESTDIR = /usr/local
+ python = /usr/bin/python
+-oopath = /usr/lib/openoffice/program
+-ooure = /usr/lib/openoffice.org/basis-link/ure-link/lib
+-oobasis = /usr/lib/openoffice/basis-link/program
++oopath = /usr/lib/libreoffice/program
++ooure = /usr/lib/libreoffice/program/ure-link/lib
++oobasis = /usr/lib/libreoffice/program
+ #
+ prefix = $(DESTDIR)
+ exec_prefix = $(prefix)
+diff -Naur a/Setup/setup.py b/Setup/setup.py
+--- a/Setup/setup.py	2011-11-28 22:26:19.000000000 +0200
++++ b/Setup/setup.py	2013-04-01 21:30:26.677444490 +0300
+@@ -27,7 +27,7 @@
+ 	os.system( """%r -O -c "import compileall; compileall.compile_dir(%r)" """ % (sys.executable,sourcedir) )	# compile optimized code
+ # try to find the possible OOo path and return a list of path
+ def find_OOpath():
+-	"""Looks for OpenOffice or staroffice directories"""
++	"""Looks for OpenOffice or staroffice or libreoffice directories"""
+ 	if sys.platform.startswith('win'):
+ 		pathlist = ('C:\\','C:\\Program Files','C:\\Programme')
+ 	else:
+@@ -40,7 +40,7 @@
+ 		except OSError:
+ 			filenames = ()
+ 		for filen in filenames:
+-			if filen.lower().startswith('openoffice') or filen.lower().startswith('staroffice') or filen.lower().startswith('ooo'):
++			if filen.lower().startswith('openoffice') or filen.lower().startswith('staroffice') or filen.lower().startswith('ooo') or filen.lower().startswith('libreoffice'):
+ 				tmp = os.path.join(path,filen)
+ 				if os.path.isdir(tmp):
+ 					OOo_dirs.append(os.path.join(tmp,'program'))	# path to the pyuno directory
