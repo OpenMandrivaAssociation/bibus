@@ -13,7 +13,7 @@ Source12:	%{name}.32.png
 Source13:	%{name}.48.png
 License:	GPLv2+
 Group:		Publishing
-Url:		http://bibus-biblio.sourceforge.net
+Url:		https://bibus-biblio.sourceforge.net
 BuildRequires:  desktop-file-utils
 BuildRequires:  python-devel
 BuildRequires:  gettext
