@@ -14,6 +14,7 @@ Source13:	%{name}.48.png
 License:	GPLv2+
 Group:		Publishing
 Url:		https://bibus-biblio.sourceforge.net
+BuildRequires:	make
 BuildRequires:  desktop-file-utils
 BuildRequires:  python-devel
 BuildRequires:  gettext
